@@ -21,12 +21,7 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-// 
-app.get('/api/', function(req, res) {
-  res.json({ unix: Date.now(), utc: new Date().toUTCString() });
-});
-
-app.get('/api/:date', function(req, res) {
+app.get('/api/:date?', function(req, res) {
   if(req.params.date) {
     const { date } = req.params;
     const dateParsed = new Date(date).getTime() || new Date(parseInt(date)).getTime();
@@ -43,7 +38,7 @@ app.get('/api/:date', function(req, res) {
       res.json(timestampObj);
     }
   } else {
-    res.status(400).json({ error: "Invalid Date" });
+    res.json({ unix: Date.now(), utc: new Date().toUTCString() });
   }
 });
 
