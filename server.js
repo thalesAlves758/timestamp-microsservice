@@ -21,13 +21,31 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+// 
+app.get('/api/', function(req, res) {
+  res.json({ unix: Date.now(), utc: new Date().toUTCString() });
 });
 
+app.get('/api/:date', function(req, res) {
+  if(req.params.date) {
+    const { date } = req.params;
+    const dateParsed = new Date(date).getTime() || new Date(parseInt(date)).getTime();
 
+    if(isNaN(dateParsed)) {
+      res.status(400).json({ error: "Invalid Date" });
+    } else {
+      
+      const timestampObj = {
+        unix: dateParsed,
+        utc: new Date(dateParsed).toUTCString()
+      };
+
+      res.json(timestampObj);
+    }
+  } else {
+    res.status(400).json({ error: "Invalid Date" });
+  }
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
